@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXURY STORE - المتجر الفاخر الملوكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* التنسيقات العالمية الملوكية - الاستايل العريض والمتفاوت */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            background: #090909; /* أسود عميق مطفي */
+            background-attachment: fixed; 
+            text-align: center; 
+            color: #ffffff; 
+        }
+        header { 
+            background: #111111; 
+            padding: 35px 20px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-bottom: 1px solid rgba(204, 170, 74, 0.3); 
+        }
+        .store-logo { 
+            font-size: 36px; 
+            font-weight: 300; 
+            letter-spacing: 8px; 
+            color: #ccaa4a; /* لون ذهبي مطفي راقٍ */
+            text-shadow: 0 2px 4px rgba(204, 170, 74, 0.1);
+        }
+        .collection-subtitle { 
+            font-size: 12px; 
+            opacity: 0.5; 
+            letter-spacing: 4px; 
+            margin-top: 8px; 
+            color: #fff;
+        }
+        .filter-bar { 
+            display: flex; 
+            overflow-x: auto; 
+            background: rgba(17, 17, 17, 0.95); 
+            padding: 15px 25px; 
+            gap: 15px; 
+            backdrop-filter: blur(10px); 
+            position: sticky; 
+            top: 105px; 
+            z-index: 999; 
+            justify-content: center;
+            border-bottom: 1px solid rgba(204, 170, 74, 0.1);
+        }
+        .filter-btn { 
+            background: transparent; 
+            border: 1px solid rgba(204, 170, 74, 0.3); 
+            color: #d6bf85;
+            padding: 10px 30px; 
+            border-radius: 0px; 
+            white-space: nowrap; 
+            font-weight: 500; 
+            letter-spacing: 1px;
+            transition: 0.4s ease; 
+            cursor: pointer; 
+        }
+        .filter-btn.active, .filter-btn:hover { 
+            background: #ccaa4a; 
+            color: #000; 
+            border-color: #ccaa4a; 
+        }
+        
+        /* شبكة المنتجات العريضة ذات المقاسات المختلفة */
+        .products-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 25px; 
+            padding: 25px; 
+            max-width: 1200px; /* العرض العريض الفخم */
+            margin: 0 auto;
+        }
+        
+        /* تأثير الـ Featured Card (المنتج الكبير العريض) */
+        .product-card.featured {
+            grid-column: span 2;
+            display: flex;
+            align-items: center;
+            text-align: right;
+        }
+        .product-card.featured img {
+            width: 60%;
+            height: 380px; 
+        }
+        .product-card.featured .prod-details {
+            width: 40%;
+            padding: 30px;
+        }
+
+        /* الكروت العادية بمقاسات طولية مختلفة (المقاسات المتنوعة للصور) */
+        .product-card { 
+            background: #121212; 
+            border-radius: 0px; 
+            overflow: hidden; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
+            border: 1px solid rgba(204, 170, 74, 0.12); 
+            transition: 0.4s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            border-color: #ccaa4a;
+            transform: translateY(-5px);
+        }
+        .product-card img { 
+            width: 100%; 
+            object-fit: cover; 
+            transition: 0.5s ease;
+        }
+        
+        /* تفاوت مقاسات الارتفاع للصور داخل الجريد */
+        .height-tall img { height: 420px; } 
+        .height-standard img { height: 280px; } 
+
+        .prod-details {
+            padding: 20px;
+            text-align: right;
+            background: #121212;
+        }
+        .price-tag { 
+            color: #ccaa4a; 
+            font-weight: 600; 
+            font-size: 22px; 
+            margin: 10px 0; 
+        }
+        
+        /* الصفحات الكاملة المعزولة */
+        .full-page { 
+            display: none; 
+            background: #090909; 
+            min-height: 100vh; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            z-index: 2000; 
+            text-align: right; 
+            overflow-y: auto;
+            animation: fadeIn 0.4s ease; 
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .cart-item { 
+            display: flex; 
+            background: #121212; 
+            margin: 20px auto; 
+            padding: 25px; 
+            max-width: 800px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5); 
+            align-items: center; 
+            border: 1px solid rgba(204, 170, 74, 0.15);
+            border-right: 4px solid #ccaa4a; 
+        }
+        .cart-item img { 
+            width: 100px; 
+            height: 100px; 
+            margin-left: 25px; 
+            object-fit: cover; 
+            border: 1px solid rgba(204, 170, 74, 0.2);
+        }
+        
+        #custom-alert { 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            background: #121212; 
+            padding: 40px; 
+            z-index: 5000; 
+            width: 85%; 
+            max-width: 450px; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9); 
+            border: 1px solid #ccaa4a; 
+            text-align: center; 
+        }
+        .alert-icon-king { 
+            font-size: 40px; 
+            margin-top: -75px; 
+            background: #121212; 
+            width: 75px; 
+            height: 75px; 
+            border-radius: 50%; 
+            margin-left: auto; 
+            margin-right: auto; 
+            line-height: 75px; 
+            border: 1px solid #ccaa4a;
+            color: #ccaa4a;
+        }
+        
+        .cart-float-btn { 
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; 
+            background: #ccaa4a; 
+            color: #000; 
+            padding: 18px 40px; 
+            border-radius: 0px; 
+            font-weight: bold; 
+            border: none; 
+            box-shadow: 0 10px 30px rgba(204, 170, 74, 0.3); 
+            z-index: 3000; 
+            cursor: pointer; 
+            letter-spacing: 1px;
+            font-size: 16px;
+        }
+        .wa-float-btn { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 30px; 
+            background: #111111; 
+            color: #25d366; 
+            width: 65px; 
+            height: 65px; 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 32px; 
+            text-decoration: none; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7); 
+            z-index: 3000; 
+            border: 1px solid rgba(37, 211, 102, 0.3);
+        }
+        .btn-delete { 
+            background: transparent; 
+            border: 1px solid #ff4757; 
+            color: #ff4757; 
+            padding: 8px 18px; 
+            cursor: pointer; 
+            font-weight: 500; 
+        }
+        .btn-delete:hover { background: #ff4757; color: white; }
+        
+        select, input {
+            background: #1a1a1a !important;
+            color: #fff !important;
+            border: 1px solid rgba(204, 170, 74, 0.25) !important;
+            padding: 14px;
+            border-radius: 0px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn-luxury {
+            background: transparent;
+            border: 1px solid #ccaa4a;
+            color: #ccaa4a;
+            padding: 18px;
+            font-size: 16px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
+            font-weight: bold;
+        }
+        .btn-luxury:hover { background: #ccaa4a; color: #000; }
+
+        /* تذييل الصفحة الفاخر الفخم المتكامل */
+        footer { 
+            background: #111; 
+            border-top: 2px solid #ccaa4a; 
+            padding: 50px 20px; 
+            color: #eee; 
+            text-align: center; 
+            margin-top: 60px; 
+        }
+        .social-icons { margin-bottom: 30px; }
+        .social-icons a { color: #ccaa4a; font-size: 26px; margin: 0 18px; text-decoration: none; transition: 0.3s; opacity: 0.8; }
+        .social-icons a:hover { opacity: 1; transform: scale(1.15); }
+        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 45px; font-size: 15px; margin-bottom: 35px; max-width: 900px; margin-left: auto; margin-right: auto; }
+        .footer-section { text-align: right; min-width: 150px; }
+        .footer-section h4 { color: #ccaa4a; margin-bottom: 15px; font-weight: 500; font-size: 18px; letter-spacing: 1px; }
+        .footer-section a { color: #eee; text-decoration: none; display: block; margin-bottom: 10px; opacity: 0.75; transition: 0.3s; }
+        .footer-section a:hover { color: #ccaa4a; opacity: 1; padding-right: 5px; }
+        .payment-icons { font-size: 32px; color: #ccaa4a; margin-bottom: 20px; opacity: 0.8; }
+        .payment-icons i { margin: 0 12px; }
+        .copyright { font-size: 13px; opacity: 0.4; letter-spacing: 1px; margin-top: 20px; color: #fff; }
+
+        /* توافق الشاشات والهواتف للـ Grid العريض */
+        @media (max-width: 768px) {
+            .product-card.featured {
+                grid-column: span 2;
+                flex-direction: column;
+            }
+            .product-card.featured img, .product-card.featured .prod-details {
+                width: 100%;
+            }
+            .product-card.featured img { height: 260px; }
+            .height-tall img { height: 320px; }
+            .height-standard img { height: 200px; }
+            .footer-links { flex-direction: column; gap: 25px; text-align: center; }
+            .footer-section { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="overlay" onclick="closeAlert()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:4999; backdrop-filter:blur(8px);"></div>
+
+<div id="custom-alert">
+    <div class="alert-icon-king">👑</div>
+    <h3 style="color:#ccaa4a; margin-top: 15px; letter-spacing: 1px;">اختيار ملكي فاخر</h3>
+    <p id="alert-msg" style="color:#bbb; font-size: 15px; margin: 20px 0;"></p>
+    <button onclick="closeAlert()" style="background:#ccaa4a; color:black; border:none; padding:12px 40px; font-weight:bold; width:100%; cursor:pointer;">متابعة التسوق الفاخر</button>
+</div>
+
+<div id="store-page">
+    <header>
+        <div class="store-logo">LUXURY STORE</div>
+        <div class="collection-subtitle">THE ROYAL COLLECTION</div>
+    </header>
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterItems('all', this)">الكل</button>
+        <button class="filter-btn" onclick="filterItems('shoes', this)">أحذية</button>
+        <button class="filter-btn" onclick="filterItems('shirts', this)">قمصان</button>
+        <button class="filter-btn" onclick="filterItems('pants', this)">بناطيل</button>
+    </div>
+    <div class="products-grid" id="main-container"></div>
+</div>
+
+<div id="cart-page" class="full-page">
+    <div style="padding: 30px; background: #111; border-bottom: 1px solid rgba(204,170,74,0.2); display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="margin:0; color:#ccaa4a; font-weight: 300; letter-spacing: 2px;">🛒 حقيبة المقتنيات الملكية</h2>
+        <button onclick="goBack()" style="background:none; border:1px solid #ccaa4a; color:#ccaa4a; padding:8px 25px; cursor:pointer;">إغلاق</button>
+    </div>
+    <div id="cart-items-list" style="padding-top: 20px;"></div>
+    <div id="cart-summary" style="padding: 35px; font-size: 26px; text-align: center; color: #ccaa4a; font-weight: 300;"></div>
+    <div style="padding: 0 25px; max-width: 800px; margin: 0 auto;">
+        <button class="btn-luxury" style="width:100%; background:#25d366; color:white; border-color:#25d366;" onclick="sendToWA()">تأكيد وإرسال الطلب عبر واتساب 💬</button>
+    </div>
+</div>
+
+<div id="product-page" class="full-page">
+    <div style="max-width: 800px; margin: 0 auto; padding: 30px;">
+        <button onclick="goBack()" style="padding: 10px 30px; border: 1px solid rgba(204,170,74,0.4); background: transparent; color:#ccaa4a; cursor: pointer; margin-bottom: 25px;">← العودة للمجموعة الكاملة</button>
+        
+        <img id="detail-img" style="width:100%; border: 1px solid rgba(204, 170, 74, 0.2); box-shadow:0 25px 50px rgba(0,0,0,0.7);">
+        <h1 id="detail-title" style="color: #fff; font-weight: 300; margin-top: 30px; letter-spacing: 1px;"></h1>
+        <p class="price-tag" id="detail-price" style="font-size:36px;"></p>
+        
+        <div style="text-align:right; background:#121212; padding:30px; border: 1px solid rgba(204, 170, 74, 0.15); margin-top: 25px;">
+            <div style="margin-bottom: 10px; color: #d6bf85;"><b>المقاس المتاح:</b></div>
+            <select id="p-size" style="margin-bottom:25px;"></select>
+            
+            <div style="margin-bottom: 10px; color: #d6bf85;"><b>اللون الفاخر:</b></div>
+            <select id="p-color" style="margin-bottom:25px;">
+                <option>أسود ملكي</option><option>أبيض ناصع</option><option>كحلي فاخر</option>
+            </select>
+            
+            <div style="margin-bottom: 10px; color: #d6bf85;"><b>الكمية المطلوبة:</b></div>
+            <input type="number" id="p-qty" value="1" min="1">
+        </div>
+        <button class="btn-luxury" style="width:100%; margin-top:30px; font-size:18px;" onclick="addToCartDetailed()">إضافة إلى حقيبة المشتريات 🛍️</button>
+    </div>
+</div>
+
+<button class="cart-float-btn" onclick="openCartPage()">🛒 الحقيبة الفاخرة (<span id="count">0</span>)</button>
+<a href="https://wa.me/201063367159" class="wa-float-btn" target="_blank">💬</a>
+
+<footer>
+    <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+    <div class="footer-links">
+        <div class="footer-section">
+            <h4>Luxury Store</h4>
+            <a href="#">من نحن</a>
+            <a href="#">خدمة العملاء</a>
+            <a href="#">المعارض الحصرية</a>
+        </div>
+        <div class="footer-section">
+            <h4>السياسات الملكية</h4>
+            <a href="#">سياسة الخصوصية</a>
+            <a href="#">سياسة الاسترجاع والتبديل</a>
+            <a href="#">الشروط والأحكام</a>
+        </div>
+        <div class="footer-section">
+            <h4>الطلبات والدعم</h4>
+            <a href="#">تتبع شحنتك</a>
+            <a href="#">اتصل بنا</a>
+            <a href="#">الدعم الفوري الدائم</a>
+        </div>
+    </div>
+    <div class="payment-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fas fa-money-bill-alt"></i>
+    </div>
+    <p class="copyright">© 2026 Luxury Store. جميع الحقوق محفوظة برابطة المقتنيات الفاخرة.</p>
+</footer>
+
+<script>
+    const myNumber = "201063367159";
+    let cart = [];
+    let currentProduct = null;
+
+    // تم إرجاع كافة المنتجات والصور المتنوعة والمقاسات الطولية لتعود برونقها الفاخر
+    const products = [
+        { id: 1, name: "بدلة تكسيدو كلاسيك سوداء - الإصدار الخاص", price: 4650, cat: 'shirts', style: 'featured', img: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80' },
+        { id: 2, name: "حذاء أكسفورد الإيطالي الفاخر", price: 1850, cat: 'shoes', style: 'height-tall', img: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600&q=80' },
+        { id: 3, name: "بنطلون قماش سليم ذهبي ملوكي", price: 1250, cat: 'pants', style: 'height-standard', img: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&q=80' },
+        { id: 4, name: "سنيكرز ملوكي بريميوم أبيض", price: 1950, cat: 'shoes', style: 'height-standard', img: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&q=80' },
+        { id: 5, name: "حقيبة جلدية ملوكية سوداء للرجال", price: 3200, cat: 'pants', style: 'height-tall', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80' }
+    ];
+
+    function init() {
+        const container = document.getElementById('main-container');
+        container.innerHTML = '';
+        products.forEach(p => {
+            container.innerHTML += `
+                <div class="product-card ${p.style}" data-category="${p.cat}" onclick="openProductPage(${p.id})">
+                    <img src="${p.img}" onerror="this.src='https://via.placeholder.com/400?text=LUXURY+STORE';">
+                    <div class="prod-details">
+                        <div style="font-weight:300; font-size:18px; color:#fff; margin-bottom:5px; letter-spacing:1px;">${p.name}</div>
+                        <div class="price-tag">${p.price} ج.م</div>
+                        <button style="background:transparent; color:#ccaa4a; border:1px solid rgba(204,170,74,0.2); width:100%; padding:12px; cursor:pointer; font-size:13px; letter-spacing:1px;">استعراض الموديل</button>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function openProductPage(id) {
+        currentProduct = products.find(x => x.id === id);
+        document.getElementById('detail-img').src = currentProduct.img;
+        document.getElementById('detail-title').innerText = currentProduct.name;
+        document.getElementById('detail-price').innerText = currentProduct.price + " ج.م";
+        const sizeSelect = document.getElementById('p-size');
+        sizeSelect.innerHTML = '';
+        if(currentProduct.cat === 'shoes') { for(let i=40; i<=48; i++) sizeSelect.innerHTML += `<option>${i}</option>`; }
+        else { ['M', 'L', 'XL', 'XXL'].forEach(s => sizeSelect.innerHTML += `<option>${s}</option>`); }
+        
+        document.getElementById('store-page').style.display = 'none';
+        document.getElementById('cart-page').style.display = 'none';
+        document.getElementById('product-page').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    function addToCartDetailed() {
+        const size = document.getElementById('p-size').value;
+        const color = document.getElementById('p-color').value;
+        const qty = parseInt(document.getElementById('p-qty').value);
+        cart.push({ ...currentProduct, size, color, qty });
+        updateCartCount();
+        showKingAlert(`تم إضافة الموديل بنجاح للحقيبة الملكية يا ملك.`); 
+    }
+
+    function renderCart() {
+        const list = document.getElementById('cart-items-list');
+        list.innerHTML = '';
+        let total = 0;
+        cart.forEach((item, index) => {
+            total += (item.price * item.qty);
+            list.innerHTML += `
+                <div class="cart-item">
+                    <img src="${item.img}" onerror="this.src='https://via.placeholder.com/100';">
+                    <div style="flex-grow:1; text-align:right;">
+                        <strong style="color:#fff; font-weight:300; font-size:18px;">${item.name}</strong><br>
+                        <small style="color:#aaa;">المقاس: ${item.size} | اللون: ${item.color}</small><br>
+                        <span style="color:#ccaa4a; font-weight:bold; display:block; margin-top:5px;">${item.qty} × ${item.price} ج.م</span>
+                    </div>
+                    <button class="btn-delete" onclick="removeFromCart(${index})">حذف</button>
+                </div>`;
+        });
+        document.getElementById('cart-summary').innerText = `القيمة الإجمالية للحقيبة الفاخرة: ${total} ج.م`;
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartCount();
+        renderCart();
+    }
+
+    function updateCartCount() {
+        document.getElementById('count').innerText = cart.length;
+    }
+
+    function showKingAlert(text) {
+        document.getElementById('alert-msg').innerText = text;
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('custom-alert').style.display = 'block';
+    }
+
+    function closeAlert() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('custom-alert').style.display = 'none';
+    }
+
+    function sendToWA() {
+        if(cart.length === 0) return showKingAlert("حقيبة التسوق فارغة حالياً يا ملك!"); 
+        let msg = "👑 طلبية ملكية عريضة من Luxury Store 👑:\n\n" + cart.map(i => `- ${i.name}\n  (المقاس: ${i.size} | اللون: ${i.color}) العدد: ${i.qty}`).join('\n\n');
+        window.open(`https://wa.me/${myNumber}?text=${encodeURIComponent(msg)}`);
+    }
+
+    function filterItems(cat, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.product-card').forEach(card => {
+            if (cat === 'all' || card.dataset.category === cat) {
+                // استعادة الـ display الافتراضي بناءً على نوع الكارد
+                card.style.display = card.classList.contains('featured') ? 'flex' : 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function openCartPage() { 
+        document.getElementById('store-page').style.display = 'none'; 
+        document.getElementById('product-page').style.display = 'none'; 
+        document.getElementById('cart-page').style.display = 'block'; 
+        renderCart(); 
+        window.scrollTo(0, 0);
+    }
+    
+    function goBack() { 
+        document.getElementById('store-page').style.display = 'block'; 
+        document.getElementById('product-page').style.display = 'none'; 
+        document.getElementById('cart-page').style.display = 'none'; 
+    }
+
+    init();
+</script>
+</body>
+</html>
